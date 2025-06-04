@@ -3,6 +3,12 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X, ChevronDown, UserCircle, Search, Bell } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import Button from './Button';
+import { Link } from 'react-router-dom';
+
+<Link to="/register">
+  <button className="btn">Register</button>
+</Link>
+
 
 const Navbar: React.FC = () => {
   const { user, logout, isRole } = useAuth();
