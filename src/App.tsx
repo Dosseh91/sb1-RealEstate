@@ -10,8 +10,6 @@ import AdminDashboard from './pages/AdminDashboard';
 import AgencyDashboard from './pages/AgencyDashboard';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { ListingProvider } from './contexts/ListingContext';
-
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Register from './pages/Register';
 
 //register button route
