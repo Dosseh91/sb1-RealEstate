@@ -12,29 +12,26 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { ListingProvider } from './contexts/ListingContext';
 import Register from './pages/Register';
 
-//register button route
-<Route path="/register" element={<Register />} />
-
 // Protected route component
-const ProtectedRoute: React.FC<{ 
+const ProtectedRoute: React.FC<{
   children: React.ReactNode;
   allowedRoles?: string[];
 }> = ({ children, allowedRoles }) => {
   const { user, loading } = useAuth();
   const location = useLocation();
-  
+
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
-  
+
   if (!user) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
-  
+
   if (allowedRoles && !allowedRoles.includes(user.role)) {
     return <Navigate to="/" replace />;
   }
-  
+
   return <>{children}</>;
 };
 
@@ -62,26 +59,29 @@ function App() {
             <Route path="/listings/:id" element={<MainLayout><ListingDetail /></MainLayout>} />
             <Route path="/login" element={<Login />} />
             
+            {/* ADD THIS LINE - The fix for your button */}
+            <Route path="/register" element={<Register />} />
+
             {/* Protected admin routes */}
-            <Route 
-              path="/admin/dashboard" 
+            <Route
+              path="/admin/dashboard"
               element={
                 <ProtectedRoute allowedRoles={['admin']}>
                   <MainLayout><AdminDashboard /></MainLayout>
                 </ProtectedRoute>
-              } 
+              }
             />
-            
+
             {/* Protected agency routes */}
-            <Route 
-              path="/agency/dashboard" 
+            <Route
+              path="/agency/dashboard"
               element={
                 <ProtectedRoute allowedRoles={['agency']}>
                   <MainLayout><AgencyDashboard /></MainLayout>
                 </ProtectedRoute>
-              } 
+              }
             />
-            
+
             {/* Redirect unknown routes to home */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
