@@ -12,7 +12,10 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { ListingProvider } from './contexts/ListingContext';
 import Register from './pages/Register';
 
-// Protected route component
+/**
+ * A component to protect routes that require authentication.
+ * It checks if a user is logged in and has the required role.
+ */
 const ProtectedRoute: React.FC<{
   children: React.ReactNode;
   allowedRoles?: string[];
@@ -20,22 +23,29 @@ const ProtectedRoute: React.FC<{
   const { user, loading } = useAuth();
   const location = useLocation();
 
+  // Show a loading indicator while checking authentication status
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
 
+  // If the user is not logged in, redirect them to the login page
   if (!user) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
+  // If the route requires specific roles and the user doesn't have one, redirect to home
   if (allowedRoles && !allowedRoles.includes(user.role)) {
     return <Navigate to="/" replace />;
   }
 
+  // If the user is authenticated and has the correct role, show the content
   return <>{children}</>;
 };
 
-// Layout with navbar and footer
+/**
+ * A layout component that includes the Navbar and Footer.
+ * This ensures a consistent look across different pages.
+ */
 const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <div className="flex flex-col min-h-screen">
@@ -46,23 +56,27 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   );
 };
 
-// App component
+/**
+ * The main App component that sets up all the application routing.
+ */
 function App() {
   return (
     <AuthProvider>
       <ListingProvider>
         <Router>
           <Routes>
-            {/* Public routes */}
+            {/* These routes are public and will have the main layout */}
             <Route path="/" element={<MainLayout><Home /></MainLayout>} />
             <Route path="/listings" element={<MainLayout><Listings /></MainLayout>} />
             <Route path="/listings/:id" element={<MainLayout><ListingDetail /></MainLayout>} />
+            
+            {/* The Login page does not have the main layout */}
             <Route path="/login" element={<Login />} />
             
-            {/* ADD THIS LINE - The fix for your button */}
-            <Route path="/register" element={<Register />} />
+            {/* The Register page is now wrapped in MainLayout to include the Navbar and Footer */}
+            <Route path="/register" element={<MainLayout><Register /></MainLayout>} />
 
-            {/* Protected admin routes */}
+            {/* These routes are protected and can only be accessed by specific user roles */}
             <Route
               path="/admin/dashboard"
               element={
@@ -71,8 +85,6 @@ function App() {
                 </ProtectedRoute>
               }
             />
-
-            {/* Protected agency routes */}
             <Route
               path="/agency/dashboard"
               element={
@@ -82,7 +94,7 @@ function App() {
               }
             />
 
-            {/* Redirect unknown routes to home */}
+            {/* This is a "catch-all" route that redirects any unknown URL to the home page */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Router>
