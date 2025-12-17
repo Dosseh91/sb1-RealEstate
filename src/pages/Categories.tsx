@@ -3,43 +3,44 @@ import { Tag } from "lucide-react";
 
 const categories = [
   {
-    key: "real-estate",
-    title: "Real Estate",
+    id: "real-estate",
+    name: "Real Estate",
     description: "Homes, apartments, land, and commercial properties",
   },
   {
-    key: "vehicles",
-    title: "Vehicles",
+    id: "vehicles",
+    name: "Vehicles",
     description: "Cars, motorcycles, boats, and other vehicles",
   },
   {
-    key: "electronics",
-    title: "Electronics",
+    id: "electronics",
+    name: "Electronics",
     description: "Computers, phones, TVs, and other electronic devices",
   },
   {
-    key: "furniture",
-    title: "Furniture",
+    id: "furniture",
+    name: "Furniture",
     description: "Home and office furniture, decor, and appliances",
   },
   {
-    key: "jobs",
-    title: "Jobs",
+    id: "jobs",
+    name: "Jobs",
     description: "Job listings and career opportunities",
   },
   {
-    key: "services",
-    title: "Services",
+    id: "services",
+    name: "Services",
     description: "Professional services and skilled trades",
   },
 ];
 
-export default function Categories() {
+const Categories: React.FC = () => {
   return (
-    <div className="container mx-auto px-4 py-16">
+    <div className="max-w-7xl mx-auto px-4 py-16">
       <h1 className="text-3xl font-bold text-center mb-4">
         Browse by Category
       </h1>
+
       <p className="text-center text-gray-600 mb-12">
         Explore our wide range of categories to find exactly what you're looking for
       </p>
@@ -47,18 +48,18 @@ export default function Categories() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {categories.map((category) => (
           <Link
-            key={category.key}
-            to={`/listings?category=${category.key}`}
+            key={category.id}
+            to={`/listings?category=${category.id}`}
             className="group bg-white border rounded-xl p-6 flex justify-between items-center hover:shadow-lg transition"
           >
             <div className="flex gap-4">
               <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
-                <Tag className="text-gray-600" />
+                <Tag className="text-gray-600 group-hover:text-teal-600" />
               </div>
 
               <div>
                 <h3 className="text-lg font-semibold group-hover:text-teal-600">
-                  {category.title}
+                  {category.name}
                 </h3>
                 <p className="text-gray-600 text-sm">
                   {category.description}
@@ -74,6 +75,7 @@ export default function Categories() {
       </div>
     </div>
   );
-}
+};
 
 export default Categories;
+
