@@ -11,6 +11,7 @@ import AgencyDashboard from './pages/AgencyDashboard';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { ListingProvider } from './contexts/ListingContext';
 import Register from './pages/Register';
+import Categories from './pages/Categories';
 
 // Protected route component
 const ProtectedRoute: React.FC<{
