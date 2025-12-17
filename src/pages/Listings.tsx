@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { ListFilter, Search, X } from 'lucide-react';
+import { Search } from 'lucide-react';
 
 import ListingCard from '../components/listings/ListingCard';
 import Button from '../components/common/Button';
@@ -12,10 +12,9 @@ const Listings: React.FC = () => {
 
   const [listings, setListings] = useState<Listing[]>([]);
   const [filteredListings, setFilteredListings] = useState<Listing[]>([]);
-  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
 
   /* ---------------- URL FILTERS ---------------- */
-  const categoryFilter = searchParams.get('category') || '';
+  const categorySlug = searchParams.get('category') || '';
   const priceMinFilter = searchParams.get('price_min') || '';
   const priceMaxFilter = searchParams.get('price_max') || '';
   const searchFilter = searchParams.get('search') || '';
@@ -23,7 +22,7 @@ const Listings: React.FC = () => {
 
   /* ---------------- FORM STATE ---------------- */
   const [filters, setFilters] = useState({
-    category: categoryFilter,
+    category: categorySlug,
     priceMin: priceMinFilter,
     priceMax: priceMaxFilter,
     search: searchFilter,
@@ -41,6 +40,7 @@ const Listings: React.FC = () => {
   useEffect(() => {
     let result = [...listings];
 
+    // 🔎 Search
     if (searchFilter) {
       const q = searchFilter.toLowerCase();
       result = result.filter(
@@ -50,24 +50,24 @@ const Listings: React.FC = () => {
       );
     }
 
-    if (categoryFilter) {
-      result = result.filter(
-        (l) => l.categoryId === categoryFilter
-      );
+    // 🏷 Category (slug → id)
+    if (categorySlug) {
+      const category = categories.find(c => c.slug === categorySlug);
+      if (category) {
+        result = result.filter(l => l.categoryId === category.id);
+      }
     }
 
+    // 💰 Price
     if (priceMinFilter) {
-      result = result.filter(
-        (l) => l.price >= Number(priceMinFilter)
-      );
+      result = result.filter(l => l.price >= Number(priceMinFilter));
     }
 
     if (priceMaxFilter) {
-      result = result.filter(
-        (l) => l.price <= Number(priceMaxFilter)
-      );
+      result = result.filter(l => l.price <= Number(priceMaxFilter));
     }
 
+    // ↕ Sort
     switch (sortBy) {
       case 'price_low':
         result.sort((a, b) => a.price - b.price);
@@ -93,7 +93,7 @@ const Listings: React.FC = () => {
     setFilteredListings(result);
   }, [
     listings,
-    categoryFilter,
+    categorySlug,
     priceMinFilter,
     priceMaxFilter,
     searchFilter,
@@ -105,7 +105,7 @@ const Listings: React.FC = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setFilters((prev) => ({ ...prev, [name]: value }));
+    setFilters(prev => ({ ...prev, [name]: value }));
   };
 
   const applyFilters = (e: React.FormEvent) => {
@@ -119,7 +119,6 @@ const Listings: React.FC = () => {
     params.set('sort', sortBy);
 
     setSearchParams(params);
-    setIsFiltersOpen(false);
   };
 
   const clearFilters = () => {
@@ -132,20 +131,16 @@ const Listings: React.FC = () => {
     setSearchParams(new URLSearchParams({ sort: sortBy }));
   };
 
-  const hasActiveFilters =
-    categoryFilter || priceMinFilter || priceMaxFilter || searchFilter;
+  const activeCategory = categories.find(c => c.slug === categorySlug);
 
   /* ---------------- UI ---------------- */
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-2">Browse Listings</h1>
 
-      {categoryFilter && (
+      {activeCategory && (
         <p className="mb-4 text-gray-600">
-          Category:{' '}
-          <span className="font-semibold">
-            {categories.find(c => c.id === categoryFilter)?.name}
-          </span>
+          Category: <span className="font-semibold">{activeCategory.name}</span>
         </p>
       )}
 
@@ -164,7 +159,7 @@ const Listings: React.FC = () => {
       {/* RESULTS */}
       {filteredListings.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredListings.map((listing) => (
+          {filteredListings.map(listing => (
             <ListingCard key={listing.id} listing={listing} />
           ))}
         </div>
