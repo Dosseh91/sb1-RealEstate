@@ -59,6 +59,7 @@ function App() {
             <Route path="/listings" element={<MainLayout><Listings /></MainLayout>} />
             <Route path="/listings/:id" element={<MainLayout><ListingDetail /></MainLayout>} />
             <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
             
             {/* ADD THIS LINE - The fix for your button */}
             <Route path="/register" element={<Register />} />
