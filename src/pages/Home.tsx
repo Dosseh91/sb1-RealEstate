@@ -79,25 +79,30 @@ const Home: React.FC = () => {
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {categories.slice(0, 6).map(category => (
-              <Link to={`/categories/${category.slug}`} key={category.id}>
+              <Link
+                key={category.id}
+                to={`/listings?category=${category.slug}`}
+              >
                 <Card hoverable className="h-full group">
                   <div className="p-6 flex items-center">
                     <div className="w-14 h-14 rounded-full bg-primary-100 flex items-center justify-center mr-4 group-hover:bg-accent-100 transition-colors">
                       <Tag className="h-6 w-6 text-primary-600 group-hover:text-accent-600 transition-colors" />
                     </div>
-                    <div>
-                      <h3 className="text-lg font-semibold text-primary-800 mb-1 group-hover:text-accent-700 transition-colors">
-                        {category.name}
-                      </h3>
-                      <p className="text-sm text-primary-600">
-                        {category.description}
-                      </p>
-                    </div>
-                    <ArrowRight className="ml-auto h-5 w-5 text-primary-400 group-hover:text-accent-500 transform group-hover:translate-x-1 transition-all" />
-                  </div>
-                </Card>
-              </Link>
-            ))}
+
+                  <div>
+                    <h3 className="text-lg font-semibold text-primary-800 mb-1 group-hover:text-accent-700 transition-colors">
+                      {category.name}
+                    </h3>
+                    <p className="text-sm text-primary-600">
+                      {category.description}
+                    </p>
+                </div>
+
+                <ArrowRight className="ml-auto h-5 w-5 text-primary-400 group-hover:text-accent-500 transform group-hover:translate-x-1 transition-all" />
+              </div>
+            </Card>
+           </Link>
+          ))}
           </div>
           
           <div className="text-center mt-10">
