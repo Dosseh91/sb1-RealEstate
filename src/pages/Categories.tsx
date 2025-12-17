@@ -1,11 +1,3 @@
-import React, { useState } from 'react';
-import { Layers, Users, Settings, PlusCircle, Grid, List, CheckCircle, XCircle, Clock } from 'lucide-react';
-import Button from '../components/common/Button';
-import Card, { CardContent, CardHeader } from '../components/common/Card';
-import ListingReviewCard from '../components/admin/ListingReviewCard';
-import CategoryManagement from '../components/admin/CategoryManagement';
-import AgencyManagement from '../components/admin/AgencyManagement';
-import { useListings } from '../contexts/ListingContext';
 import { Link } from 'react-router-dom';
 
 interface Category {
